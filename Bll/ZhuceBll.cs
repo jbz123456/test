@@ -12,9 +12,13 @@ namespace Bll
     public class ZhuceBll
     {
         ZhuceDal dal = new ZhuceDal();
-        public List<Zhuce> zhuces(string Number, string Pwd)
+        public int zhuces(string Number, string Pass)
         {
-            return dal.zhuces(Number, Pwd);
+            return dal.zhuces(Number, Pass);
+        }
+        public Page Xian(int PageIndex, int PageSize)
+        {
+            return dal.Xian(PageIndex, PageSize);
         }
     }
 }

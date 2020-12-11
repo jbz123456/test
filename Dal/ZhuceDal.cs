@@ -9,14 +9,34 @@ namespace Dal
 {
     public class ZhuceDal
     {
-        public List<Zhuce> zhuces(string Number, string Pwd) 
+        public int zhuces(string Number, string Pass) 
         {
-            string sql = "select * from Zhucebiao";
-            if (Number.Length > 0 && Pwd.Length>0)
+            string sql = $"select Count(1) from Zhucebiao where Number='{Number}' and  Pass='{Pass}'";
+            int i = DbHelper.ExecuteScalar(sql);
+            return i;
+        }
+        public Page Xian(int PageIndex,int PageSize)
+        {
+            string sql = "select * from Zhucebiao where 1=1";
+            string sqlcount = "select count(1) from Zhucebiao where 1=1";
+            sql += $"order by Id offset {(PageIndex - 1) * PageSize}  row fetch next {PageSize} row only ";
+
+            int Totalcount = DbHelper.ExecuteScalar(sqlcount);
+
+            List<Zhuce> list = DbHelper.GetList<Zhuce>(sql);
+
+            int rowcount = Convert.ToInt32(Math.Ceiling(Totalcount * 1.0 / PageSize));
+
+            Page pagre = new Page()
             {
-                sql += $"and where Number={Number} and Pwd={Pwd}";
-            }
-            return DbHelper.GetList<Zhuce>(sql);
+                PageIndex = PageIndex,
+                PageSize = PageSize,
+                TotalCount = Totalcount,
+                RowCount = rowcount,
+                Data=list
+            };
+            return pagre;
+
         }
     }
 }

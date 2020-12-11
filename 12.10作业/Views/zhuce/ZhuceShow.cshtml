@@ -9,18 +9,69 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>ZhuceShow</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
 </head>
 <body>
-    <div> 
-        <div style="width:100px;height:100px;">
-            <table>
+    <div>
+        <script>
+            function Zhuce() {
+                if ($("#Number").val().length == 0) {
+                    alert('用户名不能为空');
+                    return;
+                }
+                if ($("#Pass").val().length == 0) {
+                    alert('密码不能为空');
+                    return;
+                }
+                if ($("#yanzheng").val().length == 0) {
+                    alert('验证码不能为空');
+                    return;
+                }
+                $.ajax({
+                    url: '/zhuce/Zhuce',
+                    type: 'get',
+                    dataType: 'json',
+                    data: {
+                        Number: $("#Number").val().toString(),
+                        Pass: $("#Pass").val().toString(),
+                        verifycode: $("#yanzheng").val()
+                    },
+                    success: function (data) {
+                        console.log(data)
+                        //alert(data.Success);
+                        if (data.Success) {
+                            alert(data.Message)
+                            location.href = '/zhuce/Show';
+                        } else {
+                            alert(data.Message)
+                        }
+                    }
+                })
+            }
+/**/</script>
+        <div >
+            <table style="margin:auto;width:400px;height:400px;border:groove">
                 <tr>
                     <td>账号：</td>
-                    <td></td>
+                    <td><input id="Number" type="text" /></td>
                 </tr>
                 <tr>
                     <td>密码：</td>
-                    <td></td>
+                    <td><input id="Pass" type="text" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        <img id="verifycode" onclick="location.reload()" style="height: 36px;
+                width: 108px;
+                margin-left: -15px;
+                margin-top: -8px;
+    cursor: pointer;" src="@Url.Action("VerifyCode")" />
+                    </td>
+                    <td><input id="yanzheng" type="text" /></td>
+                </tr>
+                <tr>
+                    <td><input id="Button1" type="button" value="登录" onclick="Zhuce()" /></td>
                 </tr>
             </table>
         </div>

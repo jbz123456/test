@@ -1,0 +1,79 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Show</title>
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+</head>
+<body>
+    <script>
+        var pageindex = 1;
+        var pagesize = 2;
+        var totalcount = 0;
+        var rowcount = 0;
+
+       
+
+        $(function () {
+            Xianshi();
+        })
+        function Xianshi() {
+            $.ajax({
+                url: '/zhuce/Xianshi?PageIndex=' + pageindex + '&PageSize=' + pagesize,
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    totalcount = data.TotalCount;
+                    rowcount = data.RowCount;
+                    $("#List").empty();
+                    $(data.Data).each(function () {
+                                  var str = '<tr>'
+                            + '<td>' + this.Number + '</td>'
+                            + '<td>' + this.Pass + '</td>'
+                            + '</tr>';
+                        $("#List").append(str);
+                    })
+                    var page = "";
+                    page += '<a href="#" class="btn btn-primary" onclick="page(1)">首页</a>';
+                    page += '<a href="#" class="btn btn-primary" onclick="page(' + (pageindex-1) + ')">上一页</a>';
+                    page += '<a href="#" class="btn btn-primary" onclick="page(' + (pageindex + 1) + ')">下一页</a>';
+                    page += '<a href="#" class="btn btn-primary" onclick="page(' + (rowcount) + ')">尾页</a>';
+                    $("#A").html(page);
+                }
+            })
+        }
+        function page(indetx) {
+            if (indetx >= 0 && indetx <= rowcount)
+            {
+                pageindex = indetx;
+                Xianshi();
+            } 
+        }
+    </script>
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <td>账号</td>
+                <td>密码</td>
+            </tr>
+            <tbody id="List"></tbody>
+        </table>
+    </div>
+    <div>
+        <table class="table table-bordered">
+            <tr>
+                <td id="A">
+                    
+                </td>
+            </tr>
+        </table>
+    </div>
+</body>
+</html>
